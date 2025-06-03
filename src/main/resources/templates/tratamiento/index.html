@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Tratamientos</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            padding: 20px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            margin-top: 2rem;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .table thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        .btn {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 2px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            border: none;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        .btn-warning {
+            background: #ffc107;
+            border: none;
+            color: #212529;
+        }
+        .btn-warning:hover {
+            background: #ffca2c;
+            transform: translateY(-2px);
+        }
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        .costo {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 1.1em;
+        }
+        .descripcion {
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>🦷 Gestión de Tratamientos</h1>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-4">
+                    <a th:href="@{/tratamiento/nuevo}" class="btn btn-primary">
+                        ➕ Nuevo Tratamiento
+                    </a>
+                    <a th:href="@{/home}" class="btn btn-secondary">
+                        🏠 Inicio
+                    </a>
+                </div>
+
+                <div th:if="${not #lists.isEmpty(tratamientos)}">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="tratamiento : ${tratamientos}">
+                                <td th:text="${tratamiento.id}"></td>
+                                <td th:text="${tratamiento.nombre}"></td>
+                                <td class="descripcion" th:text="${tratamiento.descripcion}"></td>
+                                <td class="costo" th:text="'$' + ${#numbers.formatDecimal(tratamiento.precio, 0, 2)}"></td>
+                                <td>
+                                    <a th:href="@{/tratamiento/editar/{id}(id=${tratamiento.id})}" 
+                                       class="btn btn-warning btn-sm">
+                                        ✏️ Editar
+                                    </a>
+                                    <a th:href="@{/tratamiento/eliminar/{id}(id=${tratamiento.id})}" 
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('¿Estás seguro de eliminar este tratamiento?')">
+                                        🗑️ Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div th:if="${#lists.isEmpty(tratamientos)}" class="empty-state">
+                    <div>🦷</div>
+                    <h3>No hay tratamientos registrados</h3>
+                    <p>Comienza creando tu primer tratamiento</p>
+                    <a th:href="@{/tratamiento/nuevo}" class="btn btn-primary">
+                        ➕ Crear Primer Tratamiento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Cita</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+        .form-control {
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            border: none;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+            color: white;
+        }
+        .required {
+            color: #dc3545;
+        }
+        .alert-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 th:text="${cita.id != null ? '✏️ Editar Cita' : '📅 Nueva Cita'}"></h2>
+
+        <form th:action="@{/cita/guardar}" th:object="${cita}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="form-group">
+                <label for="fecha">📅 Fecha y Hora <span class="required">*</span></label>
+                <input type="datetime-local" th:field="*{fecha}" class="form-control" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="paciente">👤 Paciente <span class="required">*</span></label>
+                <select th:field="*{paciente}" class="form-control" required>
+                    <option value="">-- Seleccionar Paciente --</option>
+                    <option th:each="p : ${pacientes}" 
+                            th:value="${p.id}" 
+                            th:text="${p.nombre + ' (Tel: ' + p.telefono + ')'}"
+                            th:selected="${cita.paciente != null and cita.paciente.id == p.id}"></option>
+                </select>
+                <div th:if="${#lists.isEmpty(pacientes)}" class="alert-warning">
+                    ⚠️ No hay pacientes registrados.
+                    <a href="/paciente/nuevo" target="_blank">Crear paciente primero</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tratamiento">🏥 Tratamiento <span class="required">*</span></label>
+                <select th:field="*{tratamiento}" class="form-control" required>
+                    <option value="">-- Seleccionar Tratamiento --</option>
+                    <option th:each="t : ${tratamientos}" 
+                            th:value="${t.id}" 
+                            th:text="${t.descripcion + ' - $' + (t.precio != null ? #numbers.formatDecimal(t.precio, 1, 2) : '0.00')}"
+                            th:selected="${cita.tratamiento != null and cita.tratamiento.id == t.id}"></option>
+                </select>
+                <div th:if="${#lists.isEmpty(tratamientos)}" class="alert-warning">
+                    ⚠️ No hay tratamientos registrados.
+                    <a href="/tratamiento/nuevo" target="_blank">Crear tratamiento primero</a>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="observaciones">📝 Observaciones</label>
+                <textarea th:field="*{observaciones}" class="form-control" rows="4"
+                         placeholder="Ingrese observaciones adicionales (opcional)"></textarea>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">💾 Guardar Cita</button>
+                <a th:href="@{/cita}" class="btn btn-secondary">↩️ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

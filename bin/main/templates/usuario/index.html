@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Usuarios | Odontología</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    margin: 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="20" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="20" cy="80" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="90" r="1.2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+    animation: float 20s infinite linear;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    100% { transform: translateY(-100px) rotate(360deg); }
+}
+
+.main-container {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 0;
+}
+
+.content-section {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+    margin: 2rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInUp 0.8s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.page-title {
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    border-radius: 2px;
+}
+
+.page-icon {
+    color: #3498db;
+    font-size: 2.5rem;
+}
+
+.btn-modern {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-modern:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-home {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    box-shadow: 0 5px 15px rgba(149, 165, 166, 0.3);
+}
+
+.btn-home:hover {
+    box-shadow: 0 8px 25px rgba(149, 165, 166, 0.4);
+}
+
+.table-modern {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-top: 2rem;
+}
+
+.table-modern thead {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.table-modern thead th {
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.table-modern tbody tr {
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.table-modern tbody tr:hover {
+    background: rgba(52, 152, 219, 0.05);
+    transform: scale(1.01);
+}
+
+.table-modern tbody td {
+    padding: 1rem;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    vertical-align: middle;
+}
+
+.btn-action {
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    box-shadow: 0 3px 10px rgba(243, 156, 18, 0.3);
+}
+
+.btn-edit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    box-shadow: 0 3px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-delete:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #7f8c8d;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: #bdc3c7;
+}
+
+.badge-rol {
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rol-admin {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.rol-doctor {
+    background: linear-gradient(135deg, #27ae60, #229954);
+    color: white;
+}
+
+.rol-recepcionista {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.rol-default {
+    background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .content-section {
+        padding: 2rem 1rem;
+        margin: 1rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .table-responsive {
+        font-size: 0.85rem;
+    }
+    
+    .btn-action {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container main-container">
+    <div class="content-section">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="page-title">
+                <i class="fas fa-users page-icon"></i>
+                Lista de Usuarios
+            </h1>
+            <div>
+                <a th:href="@{/home/index}" class="btn-modern btn-home">
+                    <i class="fas fa-home"></i> Inicio
+                </a>
+                <a th:href="@{/usuario/nuevo}" class="btn-modern">
+                    <i class="fas fa-plus"></i> Nuevo Usuario
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive" th:if="${not #lists.isEmpty(usuarios)}">
+            <table class="table table-modern">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-id-badge"></i> ID</th>
+                        <th><i class="fas fa-user"></i> Nombre</th>
+                        <th><i class="fas fa-envelope"></i> Email</th>
+                        <th><i class="fas fa-user-tag"></i> Rol</th>
+                        <th><i class="fas fa-cogs"></i> Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="usuario : ${usuarios}">
+                        <td>
+                            <strong th:text="${usuario.id}"></strong>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-user-circle text-muted me-2" style="font-size: 1.5rem; margin-right: 0.5rem;"></i>
+                                <span th:text="${usuario.nombre}"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <i class="fas fa-at text-muted me-1"></i>
+                            <span th:text="${usuario.email}"></span>
+                        </td>
+                        <td>
+                            <!-- OPCIÓN 1: Usando th:switch (más limpio y legible) -->
+                            <th:block th:switch="${usuario.rol.nombre.toLowerCase()}">
+                                <span th:case="'admin'" class="badge-rol rol-admin" th:text="${usuario.rol.nombre}"></span>
+                                <span th:case="'doctor'" class="badge-rol rol-doctor" th:text="${usuario.rol.nombre}"></span>
+                                <span th:case="'recepcionista'" class="badge-rol rol-recepcionista" th:text="${usuario.rol.nombre}"></span>
+                                <span th:case="*" class="badge-rol rol-default" th:text="${usuario.rol.nombre}"></span>
+                            </th:block>
+                            
+                            <!-- OPCIÓN 2: Si prefieres usar th:classappend (comentado)
+                            <span class="badge-rol" 
+                                  th:classappend="${usuario.rol.nombre.toLowerCase() == 'admin'} ? 'rol-admin' : (${usuario.rol.nombre.toLowerCase() == 'doctor'} ? 'rol-doctor' : (${usuario.rol.nombre.toLowerCase() == 'recepcionista'} ? 'rol-recepcionista' : 'rol-default'))"
+                                  th:text="${usuario.rol.nombre}">
+                            </span>
+                            -->
+                        </td>
+                        <td>
+                            <a th:href="@{'/usuario/editar/' + ${usuario.id}}" class="btn-action btn-edit">
+                                <i class="fas fa-edit"></i> Editar
+                            </a>
+                            <a th:href="@{'/usuario/eliminar/' + ${usuario.id}}" 
+                               class="btn-action btn-delete"
+                               onclick="return confirm('¿Está seguro de eliminar este usuario?')">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${#lists.isEmpty(usuarios)}" class="empty-state">
+            <i class="fas fa-users"></i>
+            <h3>No hay usuarios registrados</h3>
+            <p>Comience agregando el primer usuario al sistema</p>
+            <a th:href="@{/usuario/nuevo}" class="btn-modern">
+                <i class="fas fa-plus"></i> Crear Primer Usuario
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
